@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Secure Terminal - Hack Access</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      color: #00FF00;
+      font-family: 'Courier New', monospace;
+      overflow: hidden;
+    }
+
+    #matrix {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .terminal {
+      position: relative;
+      z-index: 1;
+      padding: 20px;
+      white-space: pre-wrap;
+      font-size: 1.1em;
+      height: 90vh;
+      overflow-y: scroll;
+    }
+
+    .typewriter {
+      border-right: 2px solid #00ff00;
+      animation: blink 1s infinite step-start;
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    .warning {
+      color: red;
+      background: black;
+      padding: 10px;
+      font-size: 1.2em;
+      font-weight: bold;
+      border: 1px solid red;
+      margin-top: 10px;
+      animation: pulse 0.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+
+    .cover-warning {
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      color: red;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: bold;
+      text-align: center;
+      padding: 2rem;
+      animation: pulse 1s infinite;
+    }
+
+    .prank-message {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #111;
+      color: #ff0;
+      text-align: center;
+      padding: 10px;
+      font-size: 1.1em;
+      z-index: 9999;
+      border-top: 1px solid #ff0;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<!-- Cover warning that appears first -->
+<div class="cover-warning" id="cover">
+  ⚠️ Your device has been hacked.<br>If you close this, it's already too late...
+</div>
+
+<div class="terminal" id="terminal"></div>
+
+<!-- Prank message at the end -->
+<div class="prank-message" id="prank" style="display: none;">
+  😄 Relax! This is just a prank for fun. Your device is totally safe.
+</div>
+
+<script>
+  // Remove cover warning after a few seconds
+  setTimeout(() => {
+    document.getElementById("cover").style.display = "none";
+  }, 4000);
+
+  // Matrix Rain Effect
+  const canvas = document.getElementById("matrix");
+  const ctx = canvas.getContext("2d");
+  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+
+  const letters = "01";
+  const fontSize = 14;
+  const columns = canvas.width / fontSize;
+  const drops = Array(Math.floor(columns)).fill(1);
+
+  function drawMatrix() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#0F0";
+    ctx.font = fontSize + "px monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = letters.charAt(Math.floor(Math.random() * letters.length));
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }
+
+  setInterval(drawMatrix, 33);
+
+  // Terminal Typing Simulation
+  const lines = [
+    "Initializing Hack Tool v3.0...",
+    "Connecting to target system: 192.168.0.133...",
+    "Bypassing firewall...",
+    "Firewall status: BYPASSED ✅",
+    "Accessing root privileges...",
+    "Root access granted ✔️",
+    "Downloading confidential files...",
+    "File 1: nuclear_codes.zip [██████████] 100%",
+    "File 2: employees_db.sql [██████████] 100%",
+    "Injecting malware to mainframe...",
+    "Uploading backdoor...",
+    "Tracking admin IP...",
+    "LOCATION: Dubai, UAE 🌍",
+    "Alert: Tracing detection in progress...",
+    "!!! WARNING: System Intrusion Detected !!!",
+    "Encrypting logs...",
+    "Wiping tracks...",
+    "MISSION COMPLETE ✔️"
+  ];
+
+  const terminal = document.getElementById("terminal");
+  let i = 0;
+
+  function typeLine() {
+    if (i < lines.length) {
+      let text = lines[i];
+      let j = 0;
+      const interval = setInterval(() => {
+        terminal.innerHTML += text[j++];
+        terminal.innerHTML += j >= text.length ? "\n\n" : "";
+        terminal.scrollTop = terminal.scrollHeight;
+        if (j >= text.length) {
+          clearInterval(interval);
+          i++;
+          setTimeout(typeLine, 600);
+        }
+      }, 40);
+    } else {
+      showWarning();
+    }
+  }
+
+  function showWarning() {
+    const warn = document.createElement("div");
+    warn.className = "warning";
+    warn.innerText = "⚠️ SYSTEM BREACH LOGGED. AUTHORITIES NOTIFIED ⚠️";
+    terminal.appendChild(warn);
+    // Show prank reveal after a few seconds
+    setTimeout(() => {
+      document.getElementById("prank").style.display = "block";
+    }, 3000);
+  }
+
+  typeLine();
+
+
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('keydown', e => {
+    if (
+      e.key === 'F12' ||
+      e.key === 'Control' ||
+      (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'Shift'))
+    ) {
+      e.preventDefault();
+      alert("⚠️ Action Blocked!");
+    }
+  });
+
+  window.onbeforeunload = () => "⚠️ A system operation is in progress. Are you sure you want to leave?";
+</script>
+
+</body>
+</html>
