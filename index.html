@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>free iphone</title>
+  <title>Secure Terminal - Hack Access</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     html, body {
@@ -186,7 +186,7 @@
     "Injecting malware to mainframe...",
     "Uploading backdoor...",
     "Tracking admin IP...",
-    "LOCATION: Dubai, UAE 🌍",
+    "LOCATION: Fetching location... 🌍",
     "Alert: Tracing detection in progress...",
     "!!! WARNING: System Intrusion Detected !!!",
     "Encrypting logs...",
@@ -196,6 +196,18 @@
 
   const terminal = document.getElementById("terminal");
   let i = 0;
+
+  fetch("https://ipapi.co/json/")
+  .then(response => response.json())
+  .then(data => {
+    const city = data.city || "Unknown City";
+    const country = data.country_name || "Unknown Country";
+    lines[12] = `LOCATION: ${city}, ${country} 🌍`; // Update line 13 dynamically
+  })
+  .catch(() => {
+    lines[12] = "LOCATION: Unknown 🌍";
+  });
+
 
   function typeLine() {
     if (i < lines.length) {
