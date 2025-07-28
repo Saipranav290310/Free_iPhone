@@ -12,6 +12,7 @@
       color: #00FF00;
       font-family: 'Courier New', monospace;
       overflow: hidden;
+      height: 100%;
     }
 
     #matrix {
@@ -26,11 +27,12 @@
     .terminal {
       position: relative;
       z-index: 1;
-      padding: 20px;
+      padding: 15px;
       white-space: pre-wrap;
-      font-size: 1.1em;
-      height: 90vh;
-      overflow-y: scroll;
+      font-size: 1em;
+      height: 85vh;
+      overflow-y: auto;
+      box-sizing: border-box;
     }
 
     .typewriter {
@@ -46,7 +48,7 @@
       color: red;
       background: black;
       padding: 10px;
-      font-size: 1.2em;
+      font-size: 1.1em;
       font-weight: bold;
       border: 1px solid red;
       margin-top: 10px;
@@ -71,11 +73,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2rem;
+      font-size: 1.5rem;
       font-weight: bold;
       text-align: center;
       padding: 2rem;
       animation: pulse 1s infinite;
+      box-sizing: border-box;
     }
 
     .prank-message {
@@ -85,15 +88,31 @@
       background: #111;
       color: #ff0;
       text-align: center;
-      padding: 10px;
-      font-size: 1.1em;
+      padding: 8px;
+      font-size: 1em;
       z-index: 9999;
       border-top: 1px solid #ff0;
     }
-    canvas {
-  display: block;
-  width: 100vw;
-  height: 100vh;
+
+    @media screen and (max-width: 600px) {
+      .terminal {
+        font-size: 0.9em;
+        padding: 10px;
+      }
+
+      .cover-warning {
+        font-size: 1.2rem;
+        padding: 1.5rem;
+      }
+
+      .warning {
+        font-size: 1em;
+      }
+
+      .prank-message {
+        font-size: 0.95em;
+        padding: 6px;
+      }
     }
   </style>
 </head>
@@ -114,21 +133,21 @@
 </div>
 
 <script>
-  // Remove cover warning after a few seconds
-  setTimeout(() => {
-    document.getElementById("cover").style.display = "none";
-  }, 4000);
-
-  // Matrix Rain Effect
+  // Responsive canvas
   const canvas = document.getElementById("matrix");
   const ctx = canvas.getContext("2d");
-  canvas.height = window.innerHeight;
-  canvas.width = window.innerWidth;
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas();
 
   const letters = "01";
   const fontSize = 14;
-  const columns = canvas.width / fontSize;
-  const drops = Array(Math.floor(columns)).fill(1);
+  let columns = canvas.width / fontSize;
+  let drops = Array(Math.floor(columns)).fill(1);
 
   function drawMatrix() {
     ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
@@ -148,7 +167,12 @@
 
   setInterval(drawMatrix, 33);
 
-  // Terminal Typing Simulation
+  // Remove cover after delay
+  setTimeout(() => {
+    document.getElementById("cover").style.display = "none";
+  }, 4000);
+
+  // Terminal typing simulation
   const lines = [
     "Initializing Hack Tool v3.0...",
     "Connecting to target system: 192.168.0.133...",
@@ -178,7 +202,7 @@
       let text = lines[i];
       let j = 0;
       const interval = setInterval(() => {
-        terminal.innerHTML += text[j++];
+        terminal.innerHTML += text[j++] || '';
         terminal.innerHTML += j >= text.length ? "\n\n" : "";
         terminal.scrollTop = terminal.scrollHeight;
         if (j >= text.length) {
@@ -197,7 +221,6 @@
     warn.className = "warning";
     warn.innerText = "⚠️ SYSTEM BREACH LOGGED. AUTHORITIES NOTIFIED ⚠️";
     terminal.appendChild(warn);
-    // Show prank reveal after a few seconds
     setTimeout(() => {
       document.getElementById("prank").style.display = "block";
     }, 3000);
@@ -205,7 +228,7 @@
 
   typeLine();
 
-
+  // Block right-click and dev tools
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
     if (
@@ -219,14 +242,6 @@
   });
 
   window.onbeforeunload = () => "⚠️ A system operation is in progress. Are you sure you want to leave?";
-
-  function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resizeCanvas(); // Initial sizing
-window.addEventListener("resize", resizeCanvas); // Resize on rotate
-  const ctx = canvas.getContext("2d");
 </script>
 
 </body>
