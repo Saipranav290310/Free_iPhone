@@ -120,20 +120,19 @@
 
 <canvas id="matrix"></canvas>
 
-<!-- Cover warning that appears first -->
+
 <div class="cover-warning" id="cover">
   ⚠️ Your device has been hacked.<br>If you close this, it's already too late...
 </div>
 
 <div class="terminal" id="terminal"></div>
 
-<!-- Prank message at the end -->
+
 <div class="prank-message" id="prank" style="display: none;">
   😄 Relax! This is just a prank for fun. Your device is totally safe.
 </div>
 
 <script>
-  // Responsive canvas
   const canvas = document.getElementById("matrix");
   const ctx = canvas.getContext("2d");
 
@@ -167,12 +166,11 @@
 
   setInterval(drawMatrix, 33);
 
-  // Remove cover after delay
+
   setTimeout(() => {
     document.getElementById("cover").style.display = "none";
   }, 4000);
 
-  // Terminal typing simulation
   const lines = [
     "Initializing Hack Tool v3.0...",
     "Connecting to target system: 192.168.0.133...",
@@ -197,16 +195,26 @@
   const terminal = document.getElementById("terminal");
   let i = 0;
 
-  fetch("https://ipapi.co/json/")
+fetch("https://ipapi.co/json/")
   .then(response => response.json())
   .then(data => {
     const city = data.city || "Unknown City";
     const country = data.country_name || "Unknown Country";
-    lines[12] = `LOCATION: ${city}, ${country} 🌍`; // Update line 13 dynamically
+    const ip = data.ip || "???";
+    const isp = data.org || "Unknown ISP";
+    const region = data.region || "Unknown Region";
+    const timezone = data.timezone || "Unknown TZ";
+
+    lines[12] = `LOCATION: ${city}, ${region}, ${country} 🌍`;
+
+    lines.splice(13, 0, `IP ADDRESS: ${ip}`);
+    lines.splice(14, 0, `ISP: ${isp}`);
+    lines.splice(15, 0, `TIMEZONE: ${timezone}`);
   })
   .catch(() => {
     lines[12] = "LOCATION: Unknown 🌍";
   });
+
 
 
   function typeLine() {
@@ -240,7 +248,6 @@
 
   typeLine();
 
-  // Block right-click and dev tools
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
     if (
